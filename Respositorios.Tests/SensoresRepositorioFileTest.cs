@@ -13,7 +13,7 @@ namespace Respositorios.Tests
         {
             using (SensorRepositorioFile sensorRepositorio = new SensorRepositorioFile("prueba"))
             {
-                sensorRepositorio.Guardar(new Sensor()
+                sensorRepositorio.Guardar(new SensorEntity()
                 {
                     Nombre = "Termometro",
                     UnidadMedida = "ºC",

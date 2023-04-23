@@ -1,0 +1,1 @@
+dotnet ef dbcontext scaffold "server=localhost;uid=root;pwd=alberto01;database=repositorios" Pomelo.EntityFrameworkCore.MySql --schema candidate --output-dir EFSensores --namespace Repositorios.EFSensores

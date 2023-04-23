@@ -8,9 +8,10 @@ namespace Repositorios.Base
                                        where K : IEquatable<K>
     {
         T? Obtener(K id);
-        IList<T> Obtener(Func<T, bool> consulta);
+        IList<T> Obtener(Expression<Func<T, bool>> consulta);
         IList<T> Obtener();
         K Guardar(T entidad);
+        bool Borrar(K id);
 
     }
 }

@@ -9,33 +9,30 @@ using System.Reflection;
 
 namespace Repositorios.Sensores
 {
-    public class SensorRepositorioMemory : IRepositorio<Sensor, Guid>
+    public class SensorRepositorioMemory : IRepositorio<SensorEntity, Guid>
     {
-    ¡
+   
 
-
-        #region variables privadas
-        private static string _archivo = string.Empty;
-        private List<Sensor> _sensores= new List<Sensor>();
-        private bool disposedValue;
+        #region campos privados
+        private readonly List<SensorEntity> _sensores;
         #endregion
 
 
         #region constructor
-        public SensorRepositorioMemory(string archivo)
+        public SensorRepositorioMemory(List<SensorEntity> sensores)
         {
-          
+            _sensores = sensores;
         }
         #endregion
 
 
         #region IRepositorio
-        public Guid Guardar(Sensor entidad)
+        public Guid Guardar(SensorEntity entidad)
         {
             var sensor = _sensores.FirstOrDefault(s => s.Id == entidad.Id);
             if(sensor == null)
             {
-                entidad.Id  = Guid.NewGuid();
+                entidad.Id = Guid.NewGuid();
                 _sensores.Add(entidad);
                 return entidad.Id;
             }
@@ -46,19 +43,32 @@ namespace Repositorios.Sensores
         }
 
         
-        public Sensor? Obtener(Guid id)
+        public SensorEntity? Obtener(Guid id)
         {
             return _sensores.FirstOrDefault(s => s.Id == id);
         }
 
-        public IList<Sensor> Obtener(Func<Sensor, bool> consulta)
+
+        public IList<SensorEntity> Obtener(Expression<Func<SensorEntity, bool>> consulta)
         {
-            return _sensores.Where(consulta).ToList();
+            return _sensores.Where(consulta.Compile()).ToList();
         }
 
-        public IList<Sensor> Obtener()
+
+        public IList<SensorEntity> Obtener()
         {
             return _sensores.ToList();
+        }
+
+        public bool Borrar(Guid id)
+        {
+            var sensor = Obtener(id);
+            if(sensor != null)
+            {
+                _sensores.Remove(sensor);
+                return true;
+            }
+            return false;
         }
         #endregion
 
