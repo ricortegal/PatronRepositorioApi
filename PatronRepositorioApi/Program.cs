@@ -26,18 +26,16 @@ namespace PatronRepositorioApi
         {
             var directorioBase = System.Reflection.Assembly.GetExecutingAssembly().Location;
 
-            var mysqlConnectionString = "server=localhost;uid=root;pwd=alberto01;database=repositorios";
+            var mysqlConnectionString = "server=127.0.0.1;uid=root;pwd=123456;database=repositorios";
 
             var cosmosDbConnectionString = "AccountEndpoint=https://cosmosnerp.documents.azure.com:443/;AccountKey=ylKaOVYuKe4l8uT2UvCtKuqgVVAPrUmXepUWG7QyAqSKYj5YdMBozGVffqj8JlgzjzCRTl3LQTvlv5nWHtLGcw==;";
 
             var builder = WebApplication.CreateBuilder(args);
 
-            services = builder.Services;
-
             builder.Services.AddSingleton<List<SensorEntity>>();
 
             builder.Services.AddDbContext<RepositoriosContext>(dbContextOptions => dbContextOptions
-                                                                    .UseMySql(mysqlConnectionString, new MySqlServerVersion(new Version(8, 0, 30)))
+                                                                    .UseMySql(mysqlConnectionString, Microsoft.EntityFrameworkCore.ServerVersion.Parse("10.11.2-mariadb"))
                                                                     .LogTo(Console.WriteLine, LogLevel.Information)
                                                                     .EnableSensitiveDataLogging()
                                                                     .EnableDetailedErrors());
@@ -57,9 +55,9 @@ namespace PatronRepositorioApi
                 
 
             //builder.Services.AddScoped<IRepositorio<SensorEntity, Guid>, SensorRepositorioMemory>();
-            //builder.Services.AddScoped<IRepositorio<SensorEntity, Guid>, SensorRepositorioEfMariaDb>();
+            builder.Services.AddScoped<IRepositorio<SensorEntity, Guid>, SensorRepositorioEfMariaDb>();
             //builder.Services.AddScoped<IRepositorio<SensorEntity, Guid>, SensorRepositorioSqlMariaDb>();
-            builder.Services.AddScoped<IRepositorio<SensorEntity, Guid>, SensorRepositorioNoSQLCosmosDb>();
+            //builder.Services.AddScoped<IRepositorio<SensorEntity, Guid>, SensorRepositorioNoSQLCosmosDb>();
 
 
             application = builder.Build();

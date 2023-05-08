@@ -21,6 +21,7 @@ namespace Repositorios.Sensores
 
         public SensorRepositorioEfMariaDb(RepositoriosContext context)
         {
+            context.Database.EnsureCreatedAsync().Wait();
             ContextoDb = context;
         }
 
@@ -62,7 +63,15 @@ namespace Repositorios.Sensores
 
         public SensorEntity? Obtener(Guid id)
         {
-            return Obtener(s => s.Id == id).FirstOrDefault();
+            return ContextoDb.Sensores
+                 .Select(sEf => new SensorEntity()
+                 {
+                     Id = Guid.Parse(sEf.Id),
+                     Nombre = sEf.Nombre ?? string.Empty,
+                     Valor = sEf.Valor,
+                     UnidadMedida = sEf.UnidadMedida ?? string.Empty
+                 }).ToList()
+                .FirstOrDefault(s => s.Id == id);
         }
 
 
